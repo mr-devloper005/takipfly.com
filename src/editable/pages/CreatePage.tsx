@@ -32,7 +32,7 @@ const taskIcon: Record<string, typeof FileText> = {
   sbm: ArrowRight,
 }
 
-const fieldClass = 'rounded-2xl border border-[var(--editable-border)] bg-white px-4 py-3 text-sm font-bold text-[var(--editable-page-text,#2f1d16)] outline-none transition placeholder:text-current/35 focus:border-current'
+const fieldClass = 'border border-[var(--editable-border)] bg-white px-4 py-3 text-sm font-medium text-[var(--slot4-page-text)] outline-none transition placeholder:text-current/35 focus:border-[var(--slot4-accent)]'
 
 const saveDraft = (draft: DraftPost) => {
   try {
@@ -84,9 +84,9 @@ export default function CreatePage() {
   if (!session) {
     return (
       <EditableSiteShell>
-        <main className="min-h-screen bg-[var(--editable-page-bg,#fff7ee)] px-4 py-16 text-[var(--editable-page-text,#2f1d16)] sm:px-6 lg:px-8">
-          <section className="mx-auto grid max-w-5xl gap-8 rounded-[2.8rem] border border-[var(--editable-border)] bg-white/75 p-7 shadow-[0_30px_90px_rgba(15,23,42,0.08)] md:grid-cols-[0.9fr_1.1fr] md:p-10">
-            <div className="flex h-full min-h-72 items-center justify-center rounded-[2rem] bg-[var(--editable-page-text,#2f1d16)] text-[var(--editable-page-bg,#fff7ee)]">
+        <main className="min-h-screen bg-[var(--slot4-page-bg)] px-5 py-16 text-[var(--slot4-page-text)] sm:px-8 lg:px-[30px]">
+          <section className="mx-auto grid max-w-5xl gap-8 border border-[var(--editable-border)] bg-[var(--slot4-surface-bg)] p-7 md:grid-cols-[0.9fr_1.1fr] md:p-10">
+            <div className="flex h-full min-h-72 items-center justify-center bg-[var(--slot4-dark-bg)] text-white">
               <Lock className="h-20 w-20 opacity-80" />
             </div>
             <div className="self-center">
@@ -106,9 +106,9 @@ export default function CreatePage() {
 
   return (
     <EditableSiteShell>
-      <main className="min-h-screen bg-[var(--editable-page-bg,#fff7ee)] text-[var(--editable-page-text,#2f1d16)]">
-        <section className="mx-auto max-w-[var(--editable-container)] px-4 py-10 sm:px-6 lg:px-8 lg:py-16">
-          <div className="grid gap-8 rounded-[2.8rem] border border-[var(--editable-border)] bg-white/75 p-6 shadow-[0_30px_90px_rgba(15,23,42,0.08)] backdrop-blur lg:grid-cols-[0.85fr_1.15fr] lg:p-10">
+      <main className="min-h-screen bg-[var(--slot4-page-bg)] text-[var(--slot4-page-text)]">
+        <section className="mx-auto max-w-[var(--editable-container)] px-5 py-16 sm:px-8 lg:px-[30px] lg:py-[100px]">
+          <div className="grid gap-8 border border-[var(--editable-border)] bg-[var(--slot4-surface-bg)] p-6 lg:grid-cols-[0.85fr_1.15fr] lg:p-10">
             <aside>
               <p className="text-xs font-black uppercase tracking-[0.28em] opacity-55">{pagesContent.create.hero.badge}</p>
               <h1 className="mt-5 text-5xl font-black leading-[0.92] tracking-[-0.08em] sm:text-7xl">{pagesContent.create.hero.title}</h1>
@@ -128,7 +128,7 @@ export default function CreatePage() {
               </div>
             </aside>
 
-            <form onSubmit={submit} className="rounded-[2.2rem] border border-[var(--editable-border)] bg-[var(--editable-page-bg,#fff7ee)] p-5 sm:p-7">
+            <form onSubmit={submit} className="border border-[var(--editable-border)] bg-[var(--slot4-warm)] p-5 sm:p-7">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
                   <p className="text-xs font-black uppercase tracking-[0.22em] opacity-50">Create {activeTask?.label || 'post'}</p>
@@ -155,7 +155,7 @@ export default function CreatePage() {
                 </div>
               ) : null}
 
-              <button type="submit" className="mt-5 inline-flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[var(--editable-page-text,#2f1d16)] px-6 text-sm font-black uppercase tracking-[0.18em] text-[var(--editable-page-bg,#fff7ee)] transition hover:-translate-y-0.5">
+              <button type="submit" className="mt-5 inline-flex h-12 w-full items-center justify-center gap-2 bg-[var(--slot4-accent)] px-6 text-sm font-black uppercase tracking-[0.18em] text-white transition hover:opacity-90">
                 <Send className="h-4 w-4" /> {pagesContent.create.submitLabel}
               </button>
             </form>

@@ -1,3 +1,4 @@
+import { Fragment } from 'react'
 import Link from 'next/link'
 import { ArrowUpRight, BriefcaseBusiness, ChevronDown, Download, FileText, Globe, MapPin, Phone, Search, Star, UserRound } from 'lucide-react'
 import { buildTaskMetadata } from '@/lib/seo'
@@ -9,8 +10,10 @@ import { taskPageMetadata } from '@/config/site.content'
 import { taskPageVoices } from '@/editable/content/task-pages.content'
 import { EditableSiteShell } from '@/editable/shell/EditableSiteShell'
 import { getTaskTheme, taskThemeStyle } from '@/editable/theme/task-themes'
+import { Ads, getSlotSizes } from '@/lib/ads'
 
 export const revalidate = 3
+const pickRandom = (sizes: string[]) => sizes[Math.floor(Math.random() * sizes.length)]
 
 export const taskMetadata = (task: TaskKey, path: string) =>
   buildTaskMetadata(task, {
@@ -110,15 +113,15 @@ export function TaskArchiveView({ task, posts, pagination, category, basePath }:
   return (
     <EditableSiteShell>
       <main style={taskThemeStyle(task)} className="min-h-screen bg-[var(--tk-bg)] text-[var(--tk-text)]">
-        <header className="relative overflow-hidden border-b border-[var(--tk-line)]">
+        <header className={`relative overflow-hidden border-b border-[var(--tk-line)] ${task === 'pdf' ? 'bg-[var(--tk-dark,#00003f)] text-[var(--tk-on-accent)]' : 'bg-[var(--tk-surface)]'}`}>
           <div className="pointer-events-none absolute inset-x-0 -top-40 h-96 bg-[radial-gradient(60%_60%_at_50%_0%,var(--tk-glow),transparent_70%)]" />
-          <div className="relative mx-auto max-w-[var(--editable-container)] px-6 py-20 sm:py-28 lg:px-8">
+          <div className="relative mx-auto max-w-[var(--editable-container)] px-5 py-14 sm:px-8 sm:py-20 lg:px-[30px] lg:py-[100px]">
             <div className="flex items-center gap-3 text-[11px] font-medium uppercase tracking-[0.34em] text-[var(--tk-accent)]">
               <span>{theme.kicker}</span>
               <span className="h-1 w-1 rounded-full bg-[var(--tk-accent)] opacity-50" />
               <span className="text-[var(--tk-muted)]">{label}</span>
             </div>
-            <h1 className="editable-display mt-6 max-w-3xl text-balance text-[2.5rem] font-semibold leading-[1.06] tracking-[-0.03em] sm:text-5xl lg:text-6xl">
+            <h1 className="editable-display mt-5 max-w-4xl text-balance text-5xl font-bold leading-[.96] tracking-[-.07em] sm:text-6xl lg:text-[76px]">
               {voice?.headline || `Browse ${label}`}
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-[var(--tk-muted)]">{voice?.description || theme.note}</p>
@@ -130,6 +133,7 @@ export function TaskArchiveView({ task, posts, pagination, category, basePath }:
               </div>
             ) : null}
 
+            {task === 'pdf' ? <div className="mt-8 max-w-3xl"><Ads slot="header" size={pickRandom(getSlotSizes('header'))} showLabel /></div> : null}
             <div className="mt-12 flex flex-col gap-4 border-t border-[var(--tk-line)] pt-6 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm text-[var(--tk-muted)]">
                 <span className="font-semibold text-[var(--tk-text)]">{posts.length}</span> {posts.length === 1 ? 'post' : 'posts'} · {categoryLabel}
@@ -153,10 +157,10 @@ export function TaskArchiveView({ task, posts, pagination, category, basePath }:
           </div>
         </header>
 
-        <section className="mx-auto max-w-[var(--editable-container)] px-6 py-16 sm:py-20 lg:px-8">
+        <section className="mx-auto max-w-[var(--editable-container)] px-5 py-16 sm:px-8 sm:py-20 lg:px-[30px]">
           {posts.length ? (
             <div className={taskGrid[task]}>
-              {posts.map((post, index) => <ArchivePostCard key={post.id || post.slug} post={post} task={task} basePath={basePath} index={index} />)}
+              {posts.map((post, index) => <Fragment key={post.id || post.slug}><ArchivePostCard post={post} task={task} basePath={basePath} index={index} />{task === 'listing' && index === 5 ? <div className="md:col-span-2"><Ads slot="in-feed" size={pickRandom(getSlotSizes('in-feed'))} showLabel /></div> : null}</Fragment>)}
             </div>
           ) : (
             <div className="mx-auto max-w-xl rounded-[var(--tk-radius)] border border-dashed border-[var(--tk-line)] bg-[var(--tk-surface)] px-8 py-16 text-center">
@@ -256,17 +260,18 @@ function ArticleArchiveCard({ post, href, index }: { post: SitePost; href: strin
 }
 
 function ListingArchiveCard({ post, href }: { post: SitePost; href: string }) {
-  const logo = getImages(post)[0]
+  const image = getImages(post)[0]
   const location = getField(post, ['location', 'address', 'city'])
   const phone = getField(post, ['phone', 'telephone', 'mobile'])
   const website = getField(post, ['website', 'url'])
   return (
-    <Link href={href} className={`${cardBase} flex items-center gap-5 p-5 sm:p-6`}>
-      <div className="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-[1rem] border border-[var(--tk-line)] bg-[var(--tk-raised)]">
-        {logo ? <img src={logo} alt="" className="h-full w-full object-cover" /> : <BriefcaseBusiness className="h-9 w-9 text-[var(--tk-muted)]" />}
+    <Link href={href} className={`${cardBase} overflow-hidden`}>
+      <div className="grid sm:grid-cols-[180px_1fr]">
+      <div className="flex min-h-44 items-center justify-center overflow-hidden bg-[var(--tk-raised)]">
+        {image ? <img src={image} alt="" className="h-full w-full object-cover transition duration-700 group-hover:scale-[1.03]" /> : <BriefcaseBusiness className="h-9 w-9 text-[var(--tk-muted)]" />}
       </div>
-      <div className="min-w-0 flex-1">
-        <h2 className="editable-display truncate text-xl font-semibold tracking-[-0.02em]">{post.title}</h2>
+      <div className="min-w-0 p-5 sm:p-6"><p className="editable-mono text-[10px] text-[var(--tk-accent)]">Local Directory</p>
+        <h2 className="editable-display mt-2 text-2xl font-semibold tracking-[-0.04em]">{post.title}</h2>
         <RatingLine post={post} />
         <p className="mt-2 line-clamp-1 text-sm leading-6 text-[var(--tk-muted)]">{getSummary(post)}</p>
         <div className="mt-3 flex flex-wrap gap-3 text-xs font-medium text-[var(--tk-muted)]">
@@ -274,8 +279,7 @@ function ListingArchiveCard({ post, href }: { post: SitePost; href: string }) {
           {phone ? <span className="inline-flex items-center gap-1.5"><Phone className="h-3.5 w-3.5 text-[var(--tk-accent)]" /> {phone}</span> : null}
           {website ? <span className="inline-flex items-center gap-1.5"><Globe className="h-3.5 w-3.5 text-[var(--tk-accent)]" /> Website</span> : null}
         </div>
-      </div>
-      <ArrowUpRight className="h-5 w-5 shrink-0 text-[var(--tk-muted)] transition group-hover:text-[var(--tk-accent)]" />
+      </div></div>
     </Link>
   )
 }
@@ -335,17 +339,16 @@ function BookmarkArchiveCard({ post, href, index }: { post: SitePost; href: stri
 }
 
 function PdfArchiveCard({ post, href }: { post: SitePost; href: string }) {
-  const category = getCategory(post, 'Document')
+  const category = getCategory(post, 'Reference')
   return (
-    <Link href={href} className={`${cardBase} flex flex-col p-6 sm:p-7`}>
+    <Link href={href} className={`${cardBase} flex flex-col border-t-4 border-t-[var(--tk-accent)] p-6 sm:p-7`}>
       <div className="flex items-start justify-between gap-4">
         <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--tk-accent-soft)] text-[var(--tk-accent)]"><FileText className="h-6 w-6" /></div>
         <span className="rounded-full border border-[var(--tk-line)] px-3 py-1 text-[11px] font-medium uppercase tracking-[0.14em] text-[var(--tk-muted)]">{category}</span>
       </div>
-      <h2 className="editable-display mt-6 text-xl font-semibold leading-snug tracking-[-0.02em]">{post.title}</h2>
-      <RatingLine post={post} />
+      <h2 className="editable-display mt-10 text-2xl font-semibold leading-[1.05] tracking-[-0.04em]">{post.title}</h2>
       <p className="mt-3 line-clamp-3 flex-1 text-sm leading-7 text-[var(--tk-muted)]">{getSummary(post)}</p>
-      <span className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-[var(--tk-accent)]">Open document <Download className="h-4 w-4" /></span>
+      <span className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-[var(--tk-accent)]">Open reference <Download className="h-4 w-4" /></span>
     </Link>
   )
 }

@@ -10,8 +10,11 @@ import type { SitePost } from '@/lib/site-connector'
 import { EditableSiteShell } from '@/editable/shell/EditableSiteShell'
 import { toPlainText } from '@/editable/cards/PostCards'
 import { pagesContent } from '@/editable/content/pages.content'
+import { Ads, getSlotSizes } from '@/lib/ads'
 
 export const revalidate = 3
+const pickRandom = (sizes: string[]) => sizes[Math.floor(Math.random() * sizes.length)]
+const displayTaskLabel = (task: TaskKey | null) => task === 'listing' ? 'Local Directory' : task === 'pdf' ? 'Reference Library' : SITE_CONFIG.tasks.find((item) => item.key === task)?.label || 'Post'
 
 export async function generateMetadata(): Promise<Metadata> {
   return buildPageMetadata({
@@ -67,7 +70,7 @@ function SearchResultCard({ post, index }: { post: SitePost; index: number }) {
   const href = `${taskRoute || `/${task || 'article'}`}/${post.slug}`
   const image = getImage(post)
   const summary = summaryOf(post)
-  const taskLabel = SITE_CONFIG.tasks.find((item) => item.key === task)?.label || 'Post'
+  const taskLabel = displayTaskLabel(task)
   const strong = index % 5 === 0
 
   return (
@@ -103,12 +106,12 @@ export default async function SearchPage({ searchParams }: { searchParams?: Prom
 
   return (
     <EditableSiteShell>
-      <main className="min-h-screen bg-[var(--editable-page-bg,#fff7ee)] text-[var(--editable-page-text,#2f1d16)]">
-        <section className="mx-auto max-w-[var(--editable-container)] px-4 py-10 sm:px-6 lg:px-8 lg:py-16">
-          <div className="grid gap-8 rounded-[2.5rem] border border-[var(--editable-border)] bg-white/70 p-6 shadow-[0_30px_90px_rgba(15,23,42,0.08)] backdrop-blur md:grid-cols-[0.8fr_1.2fr] lg:p-10">
+      <main className="min-h-screen bg-[var(--slot4-page-bg)] text-[var(--slot4-page-text)]">
+        <section className="mx-auto max-w-[var(--editable-container)] px-5 py-16 sm:px-8 lg:px-[30px] lg:py-[100px]">
+          <div className="grid gap-8 border-b border-[var(--editable-border)] pb-10 md:grid-cols-[0.8fr_1.2fr]">
             <div>
               <p className="text-xs font-black uppercase tracking-[0.28em] opacity-55">{pagesContent.search.hero.badge}</p>
-              <h1 className="mt-5 text-5xl font-black leading-[0.92] tracking-[-0.08em] sm:text-7xl">{pagesContent.search.hero.title}</h1>
+              <h1 className="editable-display mt-5 text-5xl font-bold leading-[0.95] tracking-[-0.07em] sm:text-7xl">Search the record.</h1>
               <p className="mt-6 max-w-xl text-base font-semibold leading-8 opacity-70">{pagesContent.search.hero.description}</p>
             </div>
             <form action="/search" className="self-end rounded-[2rem] border border-[var(--editable-border)] bg-[var(--editable-page-bg,#fff7ee)] p-4 sm:p-5">
@@ -124,7 +127,7 @@ export default async function SearchPage({ searchParams }: { searchParams?: Prom
                 </label>
                 <select name="task" defaultValue={task} className="rounded-2xl border border-[var(--editable-border)] bg-white px-4 py-3 text-sm font-black outline-none">
                   <option value="">All content types</option>
-                  {enabledTasks.map((item) => <option key={item.key} value={item.key}>{item.label}</option>)}
+                  {enabledTasks.map((item) => <option key={item.key} value={item.key}>{displayTaskLabel(item.key)}</option>)}
                 </select>
               </div>
               <button className="mt-3 inline-flex h-12 w-full items-center justify-center rounded-2xl bg-[var(--editable-page-text,#2f1d16)] px-6 text-sm font-black uppercase tracking-[0.18em] text-[var(--editable-page-bg,#fff7ee)] transition hover:-translate-y-0.5" type="submit">Search</button>
@@ -149,6 +152,7 @@ export default async function SearchPage({ searchParams }: { searchParams?: Prom
               <p className="mt-3 text-sm font-semibold opacity-60">Try a different keyword, task type, or category.</p>
             </div>
           )}
+          <div className="mt-12"><Ads slot="footer" size={pickRandom(getSlotSizes('footer'))} showLabel /></div>
         </section>
       </main>
     </EditableSiteShell>
