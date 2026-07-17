@@ -52,25 +52,26 @@ export const pagesContent = {
     },
   },
   about: {
-    badge: 'Our Story',
-    title: 'A calmer, clearer way to explore content.',
-    description: `${slot4BrandConfig.siteName} is built to make long-form reading, visual discovery, and supporting resources feel like one unified experience.`,
+    badge: 'About the platform',
+    title: 'Useful information, made easier to find.',
+    description: `${slot4BrandConfig.siteName} brings together dependable local information and practical reference material in one clear, approachable place.`,
     paragraphs: [
-      'Instead of splitting everything into disconnected pages, the platform keeps related content easy to move through and easy to understand.',
-      'Whether someone starts with an article, listing, image post, or resource page, they can continue exploring without losing context.',
+      'We believe that finding a helpful place, service, guide, or resource should feel straightforward. The platform is designed to keep useful details visible, readable, and easy to return to.',
+      'By bringing local discovery and reference material into one shared space, we make it easier to explore what is available, compare options, and keep valuable information close at hand.',
+      'Every entry is presented with clear context, direct paths to the source, and a calm reading experience that puts usefulness ahead of noise.',
     ],
     values: [
       {
-        title: 'Reading-first experience',
-        description: 'We prioritize clarity, pacing, and structure so people can read, browse, and discover without noise.',
+        title: 'Clear by design',
+        description: 'Simple structure and readable presentation help people understand information quickly and confidently.',
       },
       {
-        title: 'Connected content surfaces',
-        description: 'Articles, visual posts, listings, resources, and profiles stay connected so discovery feels natural across the site.',
+        title: 'Useful connections',
+        description: 'Places, services, and reference material are arranged to make the next helpful discovery feel natural.',
       },
       {
-        title: 'Simple and trustworthy',
-        description: 'We focus on clean navigation and clear page structure to help visitors find useful content faster.',
+        title: 'Practical trust',
+        description: 'We prioritize direct details, transparent context, and links that help visitors take the next step.',
       },
     ],
   },
